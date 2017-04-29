@@ -58,10 +58,10 @@ namespace Connect4
 			// Loop indefinately until the game has been won
 			while (!haveWon) {
 				// Read player input and parse an integer representing the column number of the move
-				if (int.TryParse (Console.ReadLine (), out playerInput) && playerInput > 0)
-					haveWon = connect4.Play (playerInput-1);
+				if (int.TryParse (Console.ReadLine (), out playerInput) && playerInput >= 0 && playerInput < 7)
+					haveWon = connect4.Play (playerInput);
 				else
-					Console.WriteLine ("Only whole numbers between 1-7 representing the columns for move.");
+					Console.WriteLine ("Only whole numbers between 0-6 representing the columns for move.");
 			} 
 
 		}
@@ -70,12 +70,19 @@ namespace Connect4
 		public bool Play (int playerInput) {
 			
 			if (InsertMove (playerInput)) {
+				// if valid move -> show board and allow other player to play
 				ShowBoard ();
-				if (playerNumber == 1)
-					playerNumber = 2;
-				else if (playerNumber == 2)
-					playerNumber = 1;
+				if (CheckIfWon ()) {
+					return true;
+				} else {
+					if (playerNumber == 1)
+						playerNumber = 2;
+					else if (playerNumber == 2)
+						playerNumber = 1;
+				}
 			} else {
+				// if not a valid move -> show error and show board
+				// allow the same player to go again
 				Console.WriteLine ("Column Full -- Try again!");
 				ShowBoard ();
 			}
@@ -98,9 +105,10 @@ namespace Connect4
 					return true;
 				} else if (rowNumber > 0) {
 					// decrement row number if slot is taken
+					// decrement until an empty row is available in the column
 					rowNumber--;
 				} else {
-					// the column is full 
+					// the column is full -> show error
 					isColumnFull = true;
 					return false;
 				}
@@ -109,13 +117,68 @@ namespace Connect4
 		}
 
 		public bool CheckIfWon () {
-			// check if 4 vertically, horizontally, or diagonally 
-			return true;
+			// count number of 1s and 2s vertically, horizontally, or diagonally 
+			// if count == 4 -> game won
+
+			int player1StraightCount = 0;
+			int player2StraightCount = 0;
+
+			// checking horizontally:
+			for (int i=0; i<boardColumnSize; i++){
+				for (int j=0; j<boardRowSize; j++){
+					if (board [i, j] == 1) {
+						player1StraightCount += 1;
+					} else if (board [i, j] == 2) {
+						player2StraightCount += 1;
+					}
+
+					if (player1StraightCount >= 4) {
+						Console.WriteLine ("Player 1 wins!");
+						return true;
+					} else if (player2StraightCount >= 4) {
+						Console.WriteLine ("Player 2 wins!");
+						return true;
+					}
+				}
+//				Console.WriteLine ("Column: Player 1: " + player1StraightCount + " Player 2: " + player2StraightCount);
+//				player1StraightCount = 0;
+//				player2StraightCount = 0;
+			}
+
+			player1StraightCount = 0;
+			player2StraightCount = 0;
+
+			// checking vertically: 
+			for (int j=0; j<boardRowSize; j++){
+				for (int i=0; i<boardColumnSize; i++){
+					if (board [i, j] == 1) {
+						player1StraightCount += 1;
+					} else if (board [i, j] == 2) {
+						player2StraightCount += 1;
+					}
+
+					if (player1StraightCount >= 4) {
+						Console.WriteLine ("Player 1 wins!");
+						return true;
+					} else if (player2StraightCount >= 4) {
+						Console.WriteLine ("Player 2 wins!");
+						return true;
+					}
+				}
+//				Console.WriteLine ("Row: Player 1: " + player1StraightCount + " Player 2: " + player2StraightCount);
+//				player1StraightCount = 0;
+//				player2StraightCount = 0;
+			}
+
+			// check diagonally: 
+
+
+			return false;
 		}
 			
 		public void ShowBoard () {
-			Console.WriteLine ("=============");
-			Console.WriteLine ("1 2 3 4 5 6 7");
+			Console.WriteLine ("=Column Num:=");
+			Console.WriteLine ("0 1 2 3 4 5 6");
 			Console.WriteLine ("=============");
 			for (int i=0; i<boardColumnSize; i++){
 				for (int j=0; j<boardRowSize; j++){
@@ -124,6 +187,7 @@ namespace Connect4
 				Console.WriteLine ();
 			}
 			Console.WriteLine ();
+
 		}
 	}
 }
