@@ -1,0 +1,5 @@
+/Users/razarauf/Documents/programming/C#/Connect4/Connect4/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/Users/razarauf/Documents/programming/C#/Connect4/Connect4/bin/Debug/Connect4.exe.mdb
+/Users/razarauf/Documents/programming/C#/Connect4/Connect4/bin/Debug/Connect4.exe
+/Users/razarauf/Documents/programming/C#/Connect4/Connect4/obj/x86/Debug/Connect4.exe
+/Users/razarauf/Documents/programming/C#/Connect4/Connect4/obj/x86/Debug/Connect4.exe.mdb
