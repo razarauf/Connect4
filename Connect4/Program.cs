@@ -46,9 +46,9 @@ namespace Connect4
 			bool haveWon = false;
 
 			// Prompt player to proceed with their move
-			Console.WriteLine ("Connect4:");
-			Console.WriteLine ("Player 1 starts: ");
-			Console.WriteLine ("Enter whole number between 1-7 representing the column: ");
+			Console.WriteLine ("Connect4!");
+			Console.WriteLine ("Enter whole number between 1-7 representing the column.");
+			Console.WriteLine ("Player 1 move: ");
 
 			// Store player's input 
 			int playerInput = -1;
@@ -61,48 +61,69 @@ namespace Connect4
 				if (int.TryParse (Console.ReadLine (), out playerInput) && playerInput > 0)
 					haveWon = connect4.Play (playerInput-1);
 				else
-					Console.WriteLine ("Only whole numbers between 1-7 representing the columns");
+					Console.WriteLine ("Only whole numbers between 1-7 representing the columns for move.");
 			} 
 
 		}
 
 
 		public bool Play (int playerInput) {
-			Console.WriteLine ("Player " + playerNumber + ":");
+			
 			if (InsertMove (playerInput)) {
 				ShowBoard ();
+				if (playerNumber == 1)
+					playerNumber = 2;
+				else if (playerNumber == 2)
+					playerNumber = 1;
+			} else {
+				Console.WriteLine ("Column Full -- Try again!");
+				ShowBoard ();
 			}
-			else
-				Console.Write ("Invalid Move");
-				
+			
+			Console.WriteLine ("Player " + playerNumber + " move:");
+
+			return false;
+		}
+
+
+		public bool InsertMove (int moveNumber) {
+			int rowNumber = boardColumnSize - 1;
+			bool isColumnFull = false;
+
+			// loop and check to see a top slot to fill
+			while (!isColumnFull) {
+				if (board [rowNumber, moveNumber] != 1 && board [rowNumber, moveNumber] != 2) {
+					// if the column and row is empty: insert move
+					board [rowNumber, moveNumber] = playerNumber;
+					return true;
+				} else if (rowNumber > 0) {
+					// decrement row number if slot is taken
+					rowNumber--;
+				} else {
+					// the column is full 
+					isColumnFull = true;
+					return false;
+				}
+			}
 			return true;
-		}
-
-
-		public bool InsertMove (int columnNumber) {
-			board[boardColumnSize-1, columnNumber] = playerNumber;
-			return true; 
-		}
-
-		public bool InsertValidMove (int columnNumber) {
-			// check if the slot is taken 
-			// If it is not taken -> insert
-			// If it is taken -> increment row # 
-			// try again until top reached -> if top reached return false and ask for column from same player
 		}
 
 		public bool CheckIfWon () {
 			// check if 4 vertically, horizontally, or diagonally 
+			return true;
 		}
 			
-		public bool ShowBoard () {
+		public void ShowBoard () {
+			Console.WriteLine ("=============");
+			Console.WriteLine ("1 2 3 4 5 6 7");
+			Console.WriteLine ("=============");
 			for (int i=0; i<boardColumnSize; i++){
 				for (int j=0; j<boardRowSize; j++){
 					Console.Write (board[i,j] + " ");
 				}
 				Console.WriteLine ();
 			}
-			return true;
+			Console.WriteLine ();
 		}
 	}
 }
