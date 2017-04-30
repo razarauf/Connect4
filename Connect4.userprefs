@@ -1,1 +1,12 @@
-﻿<Properties StartupItem="Connect4/Connect4.csproj" />
+﻿<Properties StartupItem="Connect4/Connect4.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Connect4/Program.cs">
+    <Files>
+      <File FileName="Connect4/Program.cs" Line="227" Column="4" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

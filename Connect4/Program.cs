@@ -1,4 +1,6 @@
 ﻿// Program.cs
+// Raza Rauf
+// April 29th, 2017
 using System;
 
 namespace Connect4
@@ -132,7 +134,7 @@ namespace Connect4
 		}
 
 		/// <summary>
-		/// Checks if four slots have been vertically, horizontally, or diagonally by either player.
+		/// Checks whether four slots have been vertically, horizontally, or diagonally filled by either player.
 		/// </summary>
 		/// <returns><c>true</c>, if four slots have been filled by either player, <c>false</c> otherwise.</returns>
 		public bool CheckIfWon () {
@@ -245,6 +247,13 @@ namespace Connect4
 			return false;
 		}
 
+		/// <summary>
+		/// Checks whether four slots have been diagonally or alternate diagonally filled by either player.
+		/// </summary>
+		/// <returns><c>true</c>, if four slots have been filled by either player diagonally, <c>false</c> otherwise.</returns>
+		/// <param name="colCounter">Column counter.</param>
+		/// <param name="rowCounter">Row counter.</param>
+		/// <param name="isDiagonalAlt">If set to <c>true</c> checks for alternate diagonal filled slots.</param>
 		public bool checkDiagonal (int colCounter, int rowCounter, bool isDiagonalAlt) {
 			int counter = 0;
 
@@ -272,6 +281,7 @@ namespace Connect4
 		/// <returns><c>true</c>, if 4 slots were filled diagonally, <c>false</c> otherwise.</returns>
 		/// <param name="col">Column from whence to start searching for 4 diagonal slots.</param>
 		/// <param name="row">Row from whence to start searching for 4 diagonal slots.</param>
+		/// <param name="isDiagonalAlt">If set to <c>true</c> checks for alternate diagonal filled slots.</param>
 		public bool DiagonalHelper (int col, int row, bool isDiagonalAlt) {
 			int player1DiagonalCount = 0;
 			int player2DiagonalCount = 0;
@@ -305,7 +315,7 @@ namespace Connect4
 		}
 
 		/// <summary>
-		/// Prints out the current board.
+		/// Prints out the board.
 		/// </summary>
 		public void ShowBoard () {
 			Console.WriteLine ();
