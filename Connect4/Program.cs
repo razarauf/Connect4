@@ -47,8 +47,8 @@ namespace Connect4
 
 			// Prompt player to proceed with their move
 			Console.WriteLine ("Connect4!");
-			Console.WriteLine ("Enter whole number between 1-7 representing the column.");
-			Console.WriteLine ("Player 1 move: ");
+			Console.WriteLine ("Enter whole number between 0-6 representing the column.");
+			Console.WriteLine ("Player 1 has a turn: ");
 
 			// Store player's input 
 			int playerInput = -1;
@@ -60,8 +60,10 @@ namespace Connect4
 				// Read player input and parse an integer representing the column number of the move
 				if (int.TryParse (Console.ReadLine (), out playerInput) && playerInput >= 0 && playerInput < 7)
 					haveWon = connect4.Play (playerInput);
-				else
+				else {
 					Console.WriteLine ("Only whole numbers between 0-6 representing the columns for move.");
+					Console.WriteLine ("Player " + playerNumber + " has a turn:");
+				}
 			} 
 
 			// If the game has been won by a player, any following moves should return ”Game has finished!”.
@@ -96,7 +98,7 @@ namespace Connect4
 				ShowBoard ();
 			}
 			
-			Console.WriteLine ("Player " + playerNumber + " move:");
+			Console.WriteLine ("Player " + playerNumber + " has a turn:");
 
 			return false;
 		}
@@ -145,15 +147,20 @@ namespace Connect4
 				for (int j=0; j<boardRowSize; j++){
 					if (board [i, j] == 1) {
 						player1StraightCount += 1;
+						player2StraightCount = 0;
 					} else if (board [i, j] == 2) {
 						player2StraightCount += 1;
+						player1StraightCount = 0;
+					} else if (board [i, j] == 0) {
+						player1StraightCount = 0;
+						player2StraightCount = 0;
 					}
 
 					if (player1StraightCount >= 4) {
-						Console.WriteLine ("Player 1 wins by horizontal!");
+						Console.WriteLine ("Player 1 wins!");
 						return true;
 					} else if (player2StraightCount >= 4) {
-						Console.WriteLine ("Player 2 wins by horizontal!");
+						Console.WriteLine ("Player 2 wins!");
 						return true;
 					}
 				}
@@ -169,15 +176,20 @@ namespace Connect4
 				for (int i=0; i<boardColumnSize; i++){
 					if (board [i, j] == 1) {
 						player1StraightCount += 1;
+						player2StraightCount = 0;
 					} else if (board [i, j] == 2) {
 						player2StraightCount += 1;
+						player1StraightCount = 0;
+					} else if (board [i, j] == 0) {
+						player1StraightCount = 0;
+						player2StraightCount = 0;
 					}
 
 					if (player1StraightCount >= 4) {
-						Console.WriteLine ("Player 1 wins by vertical!");
+						Console.WriteLine ("Player 1 wins!");
 						return true;
 					} else if (player2StraightCount >= 4) {
-						Console.WriteLine ("Player 2 wins by vertical!");
+						Console.WriteLine ("Player 2 wins!");
 						return true;
 					}
 				}
@@ -185,8 +197,7 @@ namespace Connect4
 				player2StraightCount = 0;
 			}
 
-			// check diagonally: 
-
+			// check diagonally: \
 			/*
 		 	(0,0) (0,1) (0,2) (0,3) (0,4) (0,5) (0,6) 
 			(1,0) (1,1) (1,2) (1,3) (1,4) (1,5) (1,6) 
@@ -209,23 +220,87 @@ namespace Connect4
 			(5,6)
 			*/
 
+			if (checkDiagonal (0, 0, false))
+				return true;
+
+			// check alternate diagonally: /
+			/*
+			(0,6)
+			(1,6) (0,5)
+			(2,6) (1,5) (0,4)
+			(3,6) (2,5) (1,4) (0,3)
+			(4,6) (3,5) (2,4) (1,3) (0,2) 
+			(5,6) (4,5) (3,4) (2,3) (1,2) (0,1) 
+			(5,5) (4,4) (3,3) (2,2) (1,1) (0,0) 
+			(5,4) (4,3) (3,2) (2,1) (1,0)
+			(5,3) (4,2) (3,1) (2,0) 
+			(5,2) (4,1) (3,0) 
+			(5,1) (4,0) 
+			(5,0) 
+			*/
+
+			if (checkDiagonal (0, 6, true))
+				return true;
+
+			return false;
+		}
+
+		public bool checkDiagonal (int colCounter, int rowCounter, bool isDiagonalAlt) {
 			int counter = 0;
-			int colCounter = 0;
-			int rowCounter = 0;
 
 			while (counter < boardColumnSize+boardRowSize-1) {
-				if (DiagonalHelper (colCounter, rowCounter)) {
+				if (DiagonalHelper (colCounter, rowCounter, isDiagonalAlt)) {
 					return true;
 				}
 
 				if (counter < boardColumnSize-1) {
 					colCounter++;
 				} else {
-					rowCounter++;
+					if (isDiagonalAlt)
+						rowCounter--;
+					else 
+						rowCounter++;
 				}
 				counter++;
 			}
+			return false;
+		}
 
+		/// <summary>
+		/// Helper function for checking a 4 slot match for either player diagonally.
+		/// </summary>
+		/// <returns><c>true</c>, if 4 slots were filled diagonally, <c>false</c> otherwise.</returns>
+		/// <param name="col">Column from whence to start searching for 4 diagonal slots.</param>
+		/// <param name="row">Row from whence to start searching for 4 diagonal slots.</param>
+		public bool DiagonalHelper (int col, int row, bool isDiagonalAlt) {
+			int player1DiagonalCount = 0;
+			int player2DiagonalCount = 0;
+
+			while (col >= 0 && col < boardColumnSize && row >= 0 && row < boardRowSize) {
+				if (board [col, row] == 1) {
+					player1DiagonalCount += 1;
+					player2DiagonalCount = 0;
+				} else if (board [col, row] == 2) {
+					player2DiagonalCount += 1;
+					player1DiagonalCount = 0;
+				} else if (board [col, row] == 0) {
+					player1DiagonalCount = 0;
+					player2DiagonalCount = 0;
+				}
+
+				if (player1DiagonalCount >= 4) {
+					Console.WriteLine ("Player 1 wins!");
+					return true;
+				} else if (player2DiagonalCount >= 4) {
+					Console.WriteLine ("Player 2 wins!");
+					return true;
+				}
+				col--;
+				if (isDiagonalAlt)
+					row--;
+				else
+					row++;
+			}
 			return false;
 		}
 
@@ -240,41 +315,10 @@ namespace Connect4
 			for (int i=0; i<boardColumnSize; i++){
 				for (int j=0; j<boardRowSize; j++){
 					Console.Write (board[i,j] + " ");
-//					Console.Write ("("+i + "," + j + ") ");
 				}
 				Console.WriteLine ();
 			}
 			Console.WriteLine ();
-		}
-
-		/// <summary>
-		/// Helper function for checking a 4 slot match for either player diagonally.
-		/// </summary>
-		/// <returns><c>true</c>, if 4 slots were filled diagonally, <c>false</c> otherwise.</returns>
-		/// <param name="col">Column from whence to start searching for 4 diagonal slots.</param>
-		/// <param name="row">Row from whence to start searching for 4 diagonal slots.</param>
-		public bool DiagonalHelper (int col, int row) {
-			int player1DiagonalCount = 0;
-			int player2DiagonalCount = 0;
-
-			while (col >= 0 && col < boardColumnSize && row >= 0 && row < boardRowSize) {
-				if (board [col, row] == 1) {
-					player1DiagonalCount += 1;
-				} else if (board [col, row] == 2) {
-					player2DiagonalCount += 1;
-				}
-
-				if (player1DiagonalCount >= 4) {
-					Console.WriteLine ("Player 1 wins by diagonal!");
-					return true;
-				} else if (player2DiagonalCount >= 4) {
-					Console.WriteLine ("Player 2 wins by diagonal!");
-					return true;
-				}
-				col--;
-				row++;
-			}
-			return false;
 		}
 	}
 }
